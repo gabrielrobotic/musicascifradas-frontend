@@ -6,13 +6,13 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'campo-harmonico',
-      component: CampoHarmonicoView
-    },
-    {
-      path: '/home',
       name: 'home',
       component: () => import('../views/HomeView.vue')
+    },
+    {
+      path: '/campo-harmonico',
+      name: 'campo-harmonico',
+      component: CampoHarmonicoView
     },
     {
       path: '/about',
