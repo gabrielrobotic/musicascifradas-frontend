@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CampoHarmonicoView from '../views/CampoHarmonicoView.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,17 +7,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: HomeView
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue')
     },
     {
       path: '/campo-harmonico',
       name: 'campo-harmonico',
-      component: CampoHarmonicoView
+      component: () => import('@/views/CampoHarmonicoView.vue')
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue')
+      component: () => import('@/views/AboutView.vue')
     }
   ]
 })
