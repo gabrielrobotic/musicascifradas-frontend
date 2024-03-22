@@ -2,7 +2,10 @@ import axios from "axios"
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
-  timeout: import.meta.env.VITE_API_TIMEOUT
+  timeout: import.meta.env.VITE_API_TIMEOUT,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 
 const ApiService = {
@@ -35,7 +38,7 @@ const ApiService = {
   },
 
   async delete(endpoint) {
-    try { 
+    try {
       const response = await instance.delete(endpoint)
       return response.data
     }

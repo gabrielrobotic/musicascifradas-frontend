@@ -2,8 +2,7 @@
 </script>
 
 <template>
-  Home work
-  <router-link :to="{ name: 'login' }">Login</router-link>
+  <span>Home working</span>
 </template>
 
 <style scoped></style>
