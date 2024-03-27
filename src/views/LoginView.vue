@@ -15,22 +15,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Authentication from '@/services/authentication'
+import { ref, onMounted } from 'vue'
+import { authenticationService } from '@/services/authentication'
+import { useAuth } from '@/stores/auth'
+import router from '@/router';
 
 let login = ref('teste')
 let password = ref('testes')
 
-function submitLogin() {
-  const auth = { login: login.value, password: password.value }
-  Authentication.login(auth)
-    .then((response) => {
-      console.log('Sucesso', response)
-    })
-    .catch((error) => {
-      console.log('Falha', error)
-    })
+const auth = useAuth()
+
+async function submitLogin() {
+  const credentials = { login: login.value, password: password.value }
+  try {
+    let data = await authenticationService.login(credentials)
+    auth.setToken(data.token)
+    router.push({ name: 'home' })
+  } catch (error) {
+    console.log('Erro LoginView: ', error)
+  }
 }
+
+onMounted(() => {
+  const auth = useAuth()
+  auth.clear()
+})
 </script>
 
 <style scoped></style>

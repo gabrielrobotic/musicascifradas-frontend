@@ -1,13 +1,21 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import router from './router';
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useAuth } from './stores/auth';
+const auth = useAuth()
+
+function exibirBtnLogin() {
+  return !auth.isAuthenticated
+}
+
 </script>
 
 <template>
   <v-layout>
     <v-app-bar v-if="$router.currentRoute.value.name !== 'login'" color="surface-variant" title="Aulas de Música">
-      <router-link :to="{ name: 'login' }" class="me-2 rounded">
-        <v-icon icon="mdi-login" class="me-2"></v-icon>Login</router-link>
+      <router-link :to="{ name: 'login' }" class="me-2 rounded" :class="{ 'bg-warning': exibirBtnLogin() }">
+        <span v-if="exibirBtnLogin()"><v-icon icon="mdi-login" class="me-2"></v-icon>Login</span>
+        <span v-else><v-icon icon="mdi-logout" class="me-2"></v-icon>Logout</span>
+      </router-link>
     </v-app-bar>
 
     <v-navigation-drawer v-if="$router.currentRoute.value.name !== 'login'" expand-on-hover rail>

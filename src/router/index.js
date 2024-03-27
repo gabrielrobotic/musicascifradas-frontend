@@ -1,3 +1,4 @@
+import { useAuth } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -20,14 +21,26 @@ const router = createRouter({
     {
       path: '/campo-harmonico',
       name: 'campo-harmonico',
-      component: () => import('@/views/CampoHarmonicoView.vue')
+      component: () => import('@/views/CampoHarmonicoView.vue'),
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/views/AboutView.vue')
+      component: () => import('@/views/AboutView.vue'),
+      meta: {
+        auth: true
+      }
     }
   ]
+})
+
+router.beforeEach(async (to, from) => {
+  const auth = useAuth()
+  auth.isAuthenticated = auth.token ? await auth.checkToken() : false
+  if (to.meta.auth) {
+    if (!auth.token) { return { name: 'login' } }
+    if (!auth.isAuthenticated) { return { name: 'login' } }
+  }
 })
 
 export default router
