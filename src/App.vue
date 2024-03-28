@@ -1,12 +1,48 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useAuth } from './stores/auth';
+const auth = useAuth()
+
+function exibirBtnLogin() {
+  return !auth.isAuthenticated
+}
+
 </script>
 
 <template>
-  <RouterView />
+  <v-layout>
+    <v-app-bar v-if="$router.currentRoute.value.name !== 'login'" color="surface-variant" title="Aulas de Música">
+      <router-link :to="{ name: 'login' }" class="me-2 rounded" :class="{ 'bg-warning': exibirBtnLogin() }">
+        <span v-if="exibirBtnLogin()"><v-icon icon="mdi-login" class="me-2"></v-icon>Login</span>
+        <span v-else><v-icon icon="mdi-logout" class="me-2"></v-icon>Logout</span>
+      </router-link>
+    </v-app-bar>
+
+    <v-navigation-drawer v-if="$router.currentRoute.value.name !== 'login'" expand-on-hover rail>
+      <v-list class="px-1" nav>
+        <v-list-item>
+          <router-link :to="{ name: 'home' }" class="d-flex align-center">
+            <v-icon icon="mdi-home" class="me-4"></v-icon>
+            Home
+          </router-link>
+        </v-list-item>
+        <v-list-item>
+          <router-link :to="{ name: 'about' }" class="d-flex align-center">
+            <v-icon icon="mdi-information" class="me-4"></v-icon>
+            About
+          </router-link>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main>
+      <router-view v-slot="{ Component }">
+        <v-fade-transition hide-on-leave>
+          <component :is="Component" />
+        </v-fade-transition>
+      </router-view>
+    </v-main>
+  </v-layout>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
