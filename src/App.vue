@@ -35,7 +35,7 @@ function exibirBtnLogin() {
       </v-list>
     </v-navigation-drawer>
 
-    <v-main class="d-flex align-center justify-center">
+    <v-main>
       <router-view v-slot="{ Component }">
         <v-fade-transition hide-on-leave>
           <component :is="Component" />
