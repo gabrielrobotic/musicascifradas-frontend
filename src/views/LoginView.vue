@@ -1,3 +1,31 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { authenticationService } from '@/services/authentication'
+import { useAuth } from '@/stores/auth'
+import router from '@/router';
+
+let login = ref('')
+let password = ref('')
+
+const auth = useAuth()
+
+async function submitLogin() {
+  const credentials = { login: login.value, password: password.value }
+  try {
+    let data = await authenticationService.login(credentials)
+    auth.setToken(data.nome, data.sobrenome, data.username, data.role, data.token)
+    router.push({ name: 'home' })
+  } catch (error) {
+    console.log('Erro LoginView: ', error)
+  }
+}
+
+onMounted(() => {
+  const auth = useAuth()
+  auth.clear()
+})
+</script>
+
 <template>
   <v-sheet elevation="4" rounded="lg" class="pa-2">
     <v-row class="ma-2">
@@ -16,33 +44,5 @@
   </v-sheet>
 
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { authenticationService } from '@/services/authentication'
-import { useAuth } from '@/stores/auth'
-import router from '@/router';
-
-let login = ref('')
-let password = ref('')
-
-const auth = useAuth()
-
-async function submitLogin() {
-  const credentials = { login: login.value, password: password.value }
-  try {
-    let data = await authenticationService.login(credentials)
-    auth.setToken(data.token)
-    router.push({ name: 'home' })
-  } catch (error) {
-    console.log('Erro LoginView: ', error)
-  }
-}
-
-onMounted(() => {
-  const auth = useAuth()
-  auth.clear()
-})
-</script>
 
 <style scoped></style>

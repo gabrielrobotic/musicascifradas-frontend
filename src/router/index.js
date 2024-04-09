@@ -22,14 +22,23 @@ const router = createRouter({
       path: '/campo-harmonico',
       name: 'campo-harmonico',
       component: () => import('@/views/CampoHarmonicoView.vue'),
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
-      meta: {
-        auth: true
-      }
+    },
+    // {
+    //   path: '/user-*'
+    // },
+    /**404*/
+    {
+      path: '/:pathMatch(.*)*',
+      // name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue')
     }
   ]
 })
