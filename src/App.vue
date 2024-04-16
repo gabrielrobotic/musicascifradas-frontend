@@ -1,24 +1,66 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { useAuth } from './stores/auth';
-const auth = useAuth()
 
-function exibirBtnLogin() {
-  return !auth.isAuthenticated
+const drawer = ref(false);
+const menu = ref(false);
+const auth = useAuth();
+
+function usuarioAutenticado() {
+  return auth.isAuthenticated;
 }
+
+function ocultarMenus() {
+  drawer.value = false;
+  menu.value = false;
+};
+
+function exibirAppBar(rotaAtual) {
+  const naoExibirNaRota = ['register', 'login'];
+  return !naoExibirNaRota.includes(rotaAtual);
+};
 
 </script>
 
 <template>
   <v-layout>
-    <v-app-bar v-if="$router.currentRoute.value.name !== 'login'" color="surface-variant" title="Aulas de Música">
-      <router-link :to="{ name: 'login' }" class="me-2 rounded" :class="{ 'bg-warning': exibirBtnLogin() }">
-        <span v-if="exibirBtnLogin()"><v-icon icon="mdi-login" class="me-2"></v-icon>Login</span>
-        <span v-else><v-icon icon="mdi-logout" class="me-2"></v-icon>Logout</span>
-      </router-link>
+    <v-app-bar v-if="exibirAppBar($router.currentRoute.value.name)" color="surface-variant" density="compact">
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon variant="text" @click="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
+
+      <v-app-bar-title>Músicas Cifradas</v-app-bar-title>
+
+      <template v-slot:append>
+        <div class="text-center">
+          <v-menu v-model="menu" :close-on-content-click="false" location="bottom left">
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+            </template>
+            <v-card min-width="220" min-height="20">
+              <v-list v-if="usuarioAutenticado()">
+                <v-list-item prepend-icon="mdi-account" :title="`${auth.usuario.nome} ${auth.usuario.sobrenome}`"
+                  :subtitle="`${auth.usuario.username}`"></v-list-item>
+                <v-divider></v-divider>
+              </v-list>
+              <v-list>
+                <v-list-item>
+                  <router-link :to="{ name: 'login' }" class="rounded d-flex" @click="ocultarMenus">
+                    <span v-if="!usuarioAutenticado()" class="d-flex align-center justify-center"><v-icon
+                        icon="mdi-login" size="24" class="me-2"></v-icon>Login</span>
+                    <span v-else><v-icon icon="mdi-logout" size="24" class="me-2"></v-icon>Logout</span>
+                  </router-link>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-menu>
+        </div>
+      </template>
+
     </v-app-bar>
 
-    <v-navigation-drawer v-if="$router.currentRoute.value.name !== 'login'" expand-on-hover rail>
+    <v-navigation-drawer v-if="exibirAppBar()" v-model="drawer" temporary>
       <v-list class="px-1" nav>
         <v-list-item>
           <router-link :to="{ name: 'home' }" class="d-flex align-center">
@@ -35,7 +77,7 @@ function exibirBtnLogin() {
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="d-flex align-center justify-center">
       <router-view v-slot="{ Component }">
         <v-fade-transition hide-on-leave>
           <component :is="Component" />
