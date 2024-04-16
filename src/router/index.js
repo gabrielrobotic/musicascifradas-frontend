@@ -14,9 +14,14 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue')
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/usuario/CadastrarView.vue')
+    },
+    {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/usuario/LoginView.vue')
     },
     {
       path: '/campo-harmonico',

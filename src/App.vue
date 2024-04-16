@@ -11,16 +11,21 @@ function usuarioAutenticado() {
   return auth.isAuthenticated;
 }
 
-function ocultar() {
+function ocultarMenus() {
   drawer.value = false;
   menu.value = false;
+};
+
+function exibirAppBar(rotaAtual) {
+  const naoExibirNaRota = ['register', 'login'];
+  return !naoExibirNaRota.includes(rotaAtual);
 };
 
 </script>
 
 <template>
   <v-layout>
-    <v-app-bar v-if="$router.currentRoute.value.name !== 'login'" color="surface-variant" density="compact">
+    <v-app-bar v-if="exibirAppBar($router.currentRoute.value.name)" color="surface-variant" density="compact">
       <template v-slot:prepend>
         <v-app-bar-nav-icon variant="text" @click="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
@@ -41,7 +46,7 @@ function ocultar() {
               </v-list>
               <v-list>
                 <v-list-item>
-                  <router-link :to="{ name: 'login' }" class="rounded d-flex" @click="ocultar">
+                  <router-link :to="{ name: 'login' }" class="rounded d-flex" @click="ocultarMenus">
                     <span v-if="!usuarioAutenticado()" class="d-flex align-center justify-center"><v-icon
                         icon="mdi-login" size="24" class="me-2"></v-icon>Login</span>
                     <span v-else><v-icon icon="mdi-logout" size="24" class="me-2"></v-icon>Logout</span>
@@ -55,7 +60,7 @@ function ocultar() {
 
     </v-app-bar>
 
-    <v-navigation-drawer v-if="$router.currentRoute.value.name !== 'login'" v-model="drawer" temporary>
+    <v-navigation-drawer v-if="exibirAppBar()" v-model="drawer" temporary>
       <v-list class="px-1" nav>
         <v-list-item>
           <router-link :to="{ name: 'home' }" class="d-flex align-center">
@@ -72,7 +77,7 @@ function ocultar() {
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="d-flex align-center justify-center">
       <router-view v-slot="{ Component }">
         <v-fade-transition hide-on-leave>
           <component :is="Component" />
